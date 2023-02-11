@@ -78,5 +78,7 @@ public:
 
 private:
 	SDL_Window *window;
+	SDL_Surface *framebuffer;
 	bool quit;
+	unsigned int samples;
 };

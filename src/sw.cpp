@@ -3,6 +3,8 @@
 #include <iostream>
 #include <vector>
 
+const Uint32 COLORSCALE = 255;
+
 namespace COL781 {
 	namespace Software {
 
@@ -131,6 +133,89 @@ namespace COL781 {
 			}
 			values[name] = (void*)(new T(value));
 		}
+
+		bool Rasterizer::initialize(const std::string &title, int width, int height, int spp){
+			bool success = true;
+			if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
+				printf("SDL could not initialize! SDL_Error: %s", SDL_GetError());
+				success = false;
+			} else {
+				int displayScale = 1;
+				int screenWidth = width * displayScale;
+				int screenHeight = height * displayScale;
+				window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screenWidth, screenHeight, SDL_WINDOW_SHOWN);
+				if (window == NULL) {
+					printf("Window could not be created! SDL_Error: %s", SDL_GetError());
+					success = false;
+				} else {
+					SDL_Surface *windowSurface = SDL_GetWindowSurface(window);
+					framebuffer = SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 0);
+				}
+			}
+			return success;
+		}
+
+		bool Rasterizer::shouldQuit() {
+			SDL_Event e;
+			bool t = false;
+			while (SDL_PollEvent(&e) != 0) {
+				if (e.type == SDL_QUIT) {
+					t = true;
+				}
+			}
+			return t;
+		}
+
+		ShaderProgram Rasterizer::createShaderProgram(const VertexShader &vs, const FragmentShader &fs){
+			struct ShaderProgram program;
+			program.vs = vs;
+			program.fs = fs;
+			return program;
+		}
+
+		void Rasterizer::useShaderProgram(const ShaderProgram &program) {
+			
+		}
+
+		template <typename T> void Rasterizer::setUniform(ShaderProgram &program, const std::string &name, T value){
+			program.uniforms.set(name,value);
+		}
+
+		void Rasterizer::deleteShaderProgram(ShaderProgram &program){
+			delete &program;
+		}
+
+		template <typename T> void Rasterizer::setVertexAttribs(Object &object, int attribIndex, int n, const T* data){
+
+		}
+
+		void Rasterizer::setTriangleIndices(Object &object, int n, glm::ivec3* indices){
+			for(int i=0; i<n; i++){
+				object.indices.push_back(indices[i]);
+			}
+		}
+
+		void Rasterizer::enableDepthTest(){
+
+		}
+
+		void Rasterizer::clear(glm::vec4 color){
+			color = color*(float)COLORSCALE;
+            // std::cout << glm::to_string(color) << std::endl;
+            SDL_LockSurface(framebuffer);
+            Uint8 r = (Uint8)color.w, g = (Uint8)color.x, b = (Uint8)color.y, a = (Uint8)color.z;
+            SDL_memset(framebuffer->pixels, (int) SDL_MapRGBA(framebuffer->format,r,g,b,a), framebuffer->h * framebuffer->pitch);
+            SDL_UnlockSurface(framebuffer); 
+		}
+
+		void Rasterizer::drawObject(const Object &object){
+
+		}
+
+		void Rasterizer::show(){
+			
+		}
+
 
 	}
 }
