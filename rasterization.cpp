@@ -12,7 +12,6 @@
 #include <glm/vec4.hpp>
 
 
-
 class SoftwareRasterizer{
     private:
         // Framebuffer
@@ -108,7 +107,6 @@ class SoftwareRasterizer{
             }
         }
 
-
         // Clear Frame Buffer
         void clearBuffer(glm::vec4 color){
             color *= 255;
@@ -130,38 +128,26 @@ class SoftwareRasterizer{
 
             for (int i = 0; i < frameWidth; i++) {
                 for (int j = 0; j < frameHeight; j++){
-
-                    // float x = i + 0.5;
-					// float y = j + 0.5;
-                    // glm::vec2 P(x,y);
-                    // if(insideTriangle(t1, t2, t3, P)){
-                    //     pixels[i + frameWidth*j] = SDL_MapRGBA(framebuffer->format,red,green,blue,alpha);
-                    //     std::cout << "YES" << std::endl;
-                    // }
-                    // else{
-                    //     std::cout << "NO" << std::endl;
-                    // }
-                    
                     // I have (i,j) sample
-                    glm::ivec4 sampleColor(0, 0, 0, 0);
-                    SDL_GetRGBA(pixels[i + frameWidth*(frameHeight-1-j)], framebuffer->format, &red, &green, &blue, &alpha);
-                    glm::ivec4 previousColor(red, green, blue, alpha);
+                    Uint8 r, g, b, a;
+                    glm::vec4 sampleColor(0, 0, 0, 0);
+                    SDL_GetRGBA(pixels[i + frameWidth*(frameHeight-1-j)], framebuffer->format, &r, &g, &b, &a);
+                    glm::vec4 previousColor(r,g,b,a);
 
-                    for (int k = i+offset; k < i+1; k += offset){
-                        for (int l = j+offset; l < j+1; l += offset){
-                            glm::vec2 P(k, l);
-                            if (insideTriangle(A, B, C, P)){
+                    for (int k = 1; k <= samples; k += 1){
+                        for (int l = 1; l <= samples; l += 1){
+                            glm::vec2 P(i + (2*k-1)*offset, j + (2*l-1)*offset);
+                            if (insideTriangle(t1, t2, t3, P)){
                                 sampleColor += color;
                             }
                             else{
                                 sampleColor += previousColor;
                             }
-
                         }
                     }
 
                     sampleColor /= totalSamples;
-                    pixels[i + frameWidth*(frameHeight - 1 - j)] = SDL_MapRGBA(framebuffer->format, sampleColor[0], sampleColor[1], sampleColor[2], sampleColor[3]);
+                    pixels[i + frameWidth*(frameHeight-1-j)] = SDL_MapRGBA(framebuffer->format, sampleColor[0], sampleColor[1], sampleColor[2], sampleColor[3]);
 
 				}
                 
@@ -169,8 +155,6 @@ class SoftwareRasterizer{
             }
 
         }
-
-
 
         // Game Loop + Rendering
         void display(){
@@ -191,15 +175,11 @@ class SoftwareRasterizer{
 
         }
 
-
 };
 
 int main(int argc, char* args[]) {
-    SoftwareRasterizer srz(10,10,40);
+    SoftwareRasterizer srz(150,150,5);
+    srz.setSamples(16);
     srz.display();
     return 0;
 }
-
-
-
-    
