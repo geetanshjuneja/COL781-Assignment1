@@ -126,8 +126,11 @@ class SoftwareRasterizer{
             float offset = 0.5/(samples);
             int totalSamples = samples*samples;
 
-            for (int i = 0; i < frameWidth; i++) {
-                for (int j = 0; j < frameHeight; j++){
+            int xmin = (int)std::min(t1.x,std::min(t2.x,t3.x)),xmax = (int)std::max(t1.x,std::max(t2.x,t2.x)) + 1;
+            int ymin = (int)std::min(t1.y,std::min(t2.y,t3.y)),ymax = (int)std::max(t1.y,std::max(t2.y,t2.y)) + 1;
+
+            for (int i = xmin; i <= std::min(frameWidth-1,xmax); i++) {
+                for (int j = ymin; j <= std::min(frameHeight-1,ymax); j++){
                     // I have (i,j) sample
                     Uint8 r, g, b, a;
                     glm::vec4 sampleColor(0, 0, 0, 0);
@@ -156,8 +159,32 @@ class SoftwareRasterizer{
 
         }
 
+        void drawElements(int n, glm::vec4 *vertices, int m, glm::ivec3 *indices, glm::vec4 color){
+            for(int i=0; i<m; i++){
+                createRasterTriangle(vertices[indices[i].x], vertices[indices[i].y], vertices[indices[i].z], color);
+            }
+        }
+
         // Game Loop + Rendering
         void display(){
+
+            glm::vec4 vertices[] = {
+                glm::vec4(-0.8,  0.0, 0.0, 1.0),
+                glm::vec4(-0.4, -0.8, 0.0, 1.0),
+                glm::vec4( 0.8,  0.8, 0.0, 1.0),
+                glm::vec4(-0.4, -0.4, 0.0, 1.0)
+            };
+
+            int n = sizeof(vertices)/sizeof(vertices[0]);
+
+            glm::ivec3 indices[] = {
+                glm::ivec3(0, 1, 3),
+                glm::ivec3(1, 2, 3)
+            };
+
+            int m = sizeof(indices)/sizeof(indices[0]);
+
+
             while(!quit){
                 // Event handling
                 handleEvents();
@@ -166,8 +193,9 @@ class SoftwareRasterizer{
                 clearBuffer(glm::vec4(1.0f));
 
                 // Draw Triangle
-                createRasterTriangle(glm::vec4(-0.4, -0.8, 0.0, 1.0),glm::vec4(-0.4, -0.4, 0.0, 1.0),glm::vec4(-0.8,  0.0, 0.0, 1.0),glm::vec4(1.0,0.0,0.0,1.0f));
-                
+                // createRasterTriangle(glm::vec4(-0.4, -0.8, 0.0, 1.0),glm::vec4(-0.4, -0.4, 0.0, 1.0),glm::vec4(-0.8,  0.0, 0.0, 1.0),glm::vec4(1.0,0.0,0.0,1.0f));
+                drawElements(n,vertices,m,indices,glm::vec4(1.0,0.0,0.0,1.0f));
+
                 // Update screen to apply the changes
                 SDL_BlitScaled(framebuffer, NULL, windowSurface, NULL);
                 SDL_UpdateWindowSurface(window);
@@ -178,7 +206,7 @@ class SoftwareRasterizer{
 };
 
 int main(int argc, char* args[]) {
-    SoftwareRasterizer srz(150,150,5);
+    SoftwareRasterizer srz(640,480,1);
     srz.setSamples(16);
     srz.display();
     return 0;
