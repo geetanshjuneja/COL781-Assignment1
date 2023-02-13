@@ -81,4 +81,5 @@ private:
 	SDL_Surface *framebuffer;
 	bool quit;
 	unsigned int samples;
+	ShaderProgram myprogram;
 };

@@ -41,9 +41,7 @@ namespace COL781 {
 		};
 
 		struct Object {
-			using Buffer = std::vector<float>;
-			std::vector<Buffer> attributeValues;
-			std::vector<int> attributeDims;
+			std::vector<Attribs> attributes;
 			std::vector<glm::ivec3> indices;
 		};
 

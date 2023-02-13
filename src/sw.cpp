@@ -170,11 +170,12 @@ namespace COL781 {
 			struct ShaderProgram program;
 			program.vs = vs;
 			program.fs = fs;
+			program.uniforms = Uniforms();
 			return program;
 		}
 
 		void Rasterizer::useShaderProgram(const ShaderProgram &program) {
-			
+			myprogram = program;
 		}
 
 		template <typename T> void Rasterizer::setUniform(ShaderProgram &program, const std::string &name, T value){
@@ -186,7 +187,10 @@ namespace COL781 {
 		}
 
 		template <typename T> void Rasterizer::setVertexAttribs(Object &object, int attribIndex, int n, const T* data){
-
+			for(int i=0; i<n; i++){
+				Attribs temp();
+				
+			}
 		}
 
 		void Rasterizer::setTriangleIndices(Object &object, int n, glm::ivec3* indices){
@@ -213,7 +217,9 @@ namespace COL781 {
 		}
 
 		void Rasterizer::show(){
-			
+			SDL_Surface* windowSurface = SDL_GetWindowSurface(window);
+			SDL_BlitScaled(framebuffer, NULL, windowSurface, NULL);
+            SDL_UpdateWindowSurface(window);
 		}
 
 
