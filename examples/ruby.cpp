@@ -18,6 +18,10 @@ int main(){
     );
 
     float cos60 = 0.5000000, sin60 = 0.86602540378;
+    float red11 = 0.80392156862, red12 = 0.16078431372, red13 = 0.1725490196, red14 = 1;
+    float red21 = 0.47058823529, red22 = 0.18431372549, red23 = 0.19215686274, red24 = 1;
+    float red31 = 0.30980392156, red32 = 0.18431372549, red33 = 0.19215686274, red34 = 1;
+
 
     vec4 vertices[] = {
         // Center of Top Hexagon
@@ -48,21 +52,21 @@ int main(){
     };
 
     vec4 colors[] = {
-		vec4(0.0, 0.4, 0.6, 1.0),
-        vec4(1.0, 1.0, 0.4, 1.0),
-		vec4(0.0, 0.4, 0.6, 1.0),
-        vec4(0.0, 0.4, 0.6, 1.0),
-        vec4(1.0, 1.0, 0.4, 1.0),
-		vec4(0.0, 0.4, 0.6, 1.0),
-        vec4(0.0, 0.4, 0.6, 1.0),
-        vec4(1.0, 1.0, 0.4, 1.0),
-		vec4(0.0, 0.4, 0.6, 1.0),
-        vec4(1.0, 1.0, 0.4, 1.0),
-        vec4(1.0, 1.0, 0.4, 1.0),
-        vec4(1.0, 1.0, 0.4, 1.0),
-        vec4(1.0, 1.0, 0.4, 1.0),
-        vec4(1.0, 1.0, 0.4, 1.0),
-        vec4(1.0, 1.0, 0.4, 1.0),
+		vec4(red21, red22, red23, 1.0),
+        vec4(red11, red12, red13, 1.0),
+		vec4(red11, red12, red13, 1.0),
+        vec4(red31, red32, red33, 1.0),
+        vec4(red31, red32, red33, 1.0),
+		vec4(red31, red32, red33, 1.0),
+        vec4(red11, red12, red13, 1.0),
+        vec4(red21, red22, red23, 1.0),
+		vec4(red11, red12, red13, 1.0),
+		vec4(red11, red12, red13, 1.0),
+        vec4(red31, red32, red33, 1.0),
+        vec4(red31, red32, red33, 1.0),
+		vec4(red31, red32, red33, 1.0),
+        vec4(red11, red12, red13, 1.0),
+        vec4(red21, red22, red23, 1.0),
     };
 
 	ivec3 triangles[] = {
@@ -126,7 +130,7 @@ int main(){
         float time = SDL_GetTicks64()*1e-3;
         r.clear(vec4(1.0, 1.0, 1.0, 1.0));
         r.useShaderProgram(program);
-        model = rotate(mat4(1.0f), radians(speed * time), vec3(1.0f,0.0f,0.0f));
+        model = rotate(mat4(1.0f), radians(speed * time), vec3(1.0f,1.0f,1.0f));
         r.setUniform(program, "transform", projection * view * model);
 		r.drawObject(shape);
         r.show();

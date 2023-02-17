@@ -26,5 +26,5 @@ target_link_libraries(e4 a1)
 add_executable(e5 examples/e5.cpp)
 target_link_libraries(e5 a1)
 
-add_executable(scene examples/ruby.cpp)
+add_executable(ruby examples/ruby.cpp)
 target_link_libraries(ruby a1)
