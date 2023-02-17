@@ -1,6 +1,5 @@
 // Do not include this file directly!
 // The contents will be included into the files a1sw.hpp and a1hw.hpp
-
 class Rasterizer {
 public:
 
@@ -53,6 +52,9 @@ public:
 	// Draws the triangles of the given object.
 	void drawObject(const Object &object);
 
+	void drawCircle(int c_x, int c_y, int c_r, glm::vec4 color);
+
+
 	// Displays the framebuffer on the screen.
 	void show(); 
 
@@ -77,9 +79,15 @@ public:
 	FragmentShader fsIdentity(); 
 
 private:
-	SDL_Window *window;
-	SDL_Surface *framebuffer;
+	SDL_Window* window;
+	SDL_Surface* frameBuffer;
+	SDL_Surface* windowSurface;
+	const ShaderProgram* myProgram;
+	int frameWidth, frameHeight, totalSamples;
 	bool quit;
-	unsigned int samples;
-	ShaderProgram myprogram;
+	bool depthTest = false;
+	bool insideTriangle(glm::vec2 A, glm::vec2 B, glm::vec2 C, glm::vec2 P);
+	void createRasterTriangle(glm::vec4 A, glm::vec4 B, glm::vec4 C, glm::vec4 C1, glm::vec4 C2, glm::vec4 C3);
+	float* zbuffer;
+
 };
