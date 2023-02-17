@@ -9,7 +9,7 @@ find_package(OpenGL REQUIRED)
 find_package(SDL2 REQUIRED)
 
 add_library(a1 src/hw.cpp src/sw.cpp)
-target_link_libraries(a1 GLEW::GLEW glm::glm OpenGL::GL SDL2::SDL2)
+target_link_libraries(a1 GLEW::GLEW glm OpenGL::GL SDL2::SDL2)
 
 add_executable(e1 examples/e1.cpp)
 target_link_libraries(e1 a1)
@@ -25,3 +25,6 @@ target_link_libraries(e4 a1)
 
 add_executable(e5 examples/e5.cpp)
 target_link_libraries(e5 a1)
+
+add_executable(scene examples/ruby.cpp)
+target_link_libraries(ruby a1)
